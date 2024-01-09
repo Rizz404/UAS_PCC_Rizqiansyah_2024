@@ -13,7 +13,7 @@ jobs:
 
       - name: Build and tag docker image
         run: |
-          docker build -t ${{secrets.USERNAME}}/UAS_PCC_Rizqiansyah_2024:latest -f Dockerfile .
+          docker build -t ${{secrets.USERNAME}}/uas_pcc_rizqiansyah_2024:latest -f Dockerfile .
 
       - name: Push to Dockerhub
         run: |

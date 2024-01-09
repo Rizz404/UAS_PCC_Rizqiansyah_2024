@@ -1,0 +1,40 @@
+name: GitHub Actions to Publish Docker Image
+run-name: ${{ github.actor }} in action
+on:
+  push:
+    branches:
+      - main
+jobs:
+  Build-and-push-docker-image:
+    runs-on: ubuntu-latest
+    steps:
+      # * Menggunakan actions/checkout@v4 untuk mengambil kode repositori.
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      # * Pake Docker Buildx (sebuah plugin CLI Docker yang extend fitur docker build).
+      # * docker/setup-buildx-action@v1 untuk mengatur Docker Buildx di runner.
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      # * Menggunakan actions/cache@v2 untuk mencache Docker.
+      # * Selama build akan disimpan dan bisa digunakan lagi buat build di masa depan.
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Build and tag docker image
+        run: |
+          docker build -t ${{secrets.USERNAME}}/uas_pcc_2024:v1 -f Dockerfile .
+
+      - name: Push to Dockerhub
+        run: |
+          docker login -u ${{secrets.USERNAME}} -p ${{secrets.ACCESS_TOKEN}} && docker push ${{secrets.USERNAME}}/uas_pcc_2024:v1
+
+      - name: Error handling
+        if: failure()
+        run: echo "There was an error in the build or push process."

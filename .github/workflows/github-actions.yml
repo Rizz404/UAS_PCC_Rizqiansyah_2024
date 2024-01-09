@@ -17,4 +17,4 @@ jobs:
 
       - name: Push to Dockerhub
         run: |
-          docker login -u ${{secrets.USERNAME}} -p ${{secrets.ACCESS_TOKEN}} && docker push ${{secrets.USERNAME}}/UAS_PCC_Rizqiansyah_2024:latest
+          docker login -u ${{secrets.USERNAME}} -p ${{secrets.ACCESS_TOKEN}} && docker push ${{secrets.USERNAME}}/uas_pcc_rizqiansyah_2024:latest
